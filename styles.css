@@ -1,0 +1,53 @@
+#results {
+    display: flex;
+    padding: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.listing {
+    margin: 15px;
+    padding: 15px;
+    display: flex;
+    flex: 1 0 30%;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: flex-start;
+}
+
+.listing a {
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+}
+
+.listing div {
+    flex: 1 0 51%;
+}
+
+.listing img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+}
+
+.listing p {
+    margin: 0px;
+    flex: 1 0 50%;
+    text-align: center;
+}
+
+.price {
+    text-align: left;
+}
+
+.listing p:last-child {
+    flex: 0 0 50%;
+    align-self: flex-start;
+}
+
+td {
+    white-space: pre-line;
+}
