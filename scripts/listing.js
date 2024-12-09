@@ -7,6 +7,19 @@ function loadData() {
         dataType: "text",
         success: function(data) {createListing(data);}
     });
+    setCartQuantity();
+}
+
+function setCartQuantity() {
+    let cart = JSON.parse(window.sessionStorage.getItem("cart"));
+    let cartQuantity = 0;
+    for (let i = 0; i < cart.length; i++) {
+        cartQuantity += 1 * cart[i].quantity;
+    }
+    if (cartQuantity == 0)
+        $("a[href='cart.html']").text("Cart");
+    else
+        $("a[href='cart.html']").html(`Cart<sup>${cartQuantity}</sup>`);
 }
 
 function createListing(data) {
@@ -28,8 +41,11 @@ function createListing(data) {
         for (let i = 0; i < cart.length; i++) {
             if (cart[i].listingID == listing.listingID) {
                 inCart = true;
-                $("#addCart").attr("type", "number").attr("min", "0").attr("value", cart[i].quantity);
+                $("#addCart").attr("type", "number").attr("min", "1").attr("value", cart[i].quantity);
                 $("#addCart").on("change", changeQuantity);
+                let removeBtn = document.createElement("button");
+                $(removeBtn).text("Remove from Cart").attr("id", "removeBtn").on("click", function(event) {removeFromCart(event);});
+                $("body").append(removeBtn);
                 break;
             }
         }
@@ -52,24 +68,33 @@ function addToCart(event) {
     cart.push(cartItem);
     window.sessionStorage.setItem("cart", JSON.stringify(cart));
     $("#addCart").off("click")
-    $("#addCart").attr("type", "number").attr("min", "0").attr("value", "1");
+    $("#addCart").attr("type", "number").attr("min", "1").attr("value", "1");
     $("#addCart").on("change", changeQuantity);
+    let removeBtn = document.createElement("button");
+    $(removeBtn).text("Remove from Cart").attr("id", "removeBtn").on("click", function(event) {removeFromCart(event);});
+    $("body").append(removeBtn);
+    setCartQuantity();
+}
+
+function removeFromCart(event) {
+    let cart = JSON.parse(window.sessionStorage.getItem("cart"));
+    for (let i = 0; i < cart.length; i++) {
+        if (cart[i].listingID == $("#name").attr("data-id")) {
+            cart.splice(i,1);
+            break;
+        }
+    }
+    $("#addCart").attr("type", "button").attr("value", "Add to Cart")
+    $("#addCart").off("change");
+    $("#addCart").on("click", function(event) {addToCart(event)});
+    $("#removeBtn").remove();
+    window.sessionStorage.setItem("cart", JSON.stringify(cart));
+    setCartQuantity();
 }
 
 function changeQuantity() {
     let cart = JSON.parse(window.sessionStorage.getItem("cart"));
-    if ($("#addCart").val() == 0) {
-        for (let i = 0; i < cart.length; i++) {
-            if (cart[i].listingID == $("#name").attr("data-id")) {
-                cart.splice(i,1);
-                break;
-            }
-        }
-        $("#addCart").attr("type", "button").attr("value", "Add to Cart")
-        $("#addCart").off("change");
-        $("#addCart").on("click", function(event) {addToCart(event)});
-    }
-    else {
+    if ($("#addCart").val() > 0) {
         for (let i = 0; i < cart.length; i++) {
             if (cart[i].listingID == $("#name").attr("data-id")) {
                 cart[i].quantity = $("#addCart").val();
@@ -78,6 +103,7 @@ function changeQuantity() {
         }
     }
     window.sessionStorage.setItem("cart", JSON.stringify(cart));
+    setCartQuantity();
 }
 
 function createJSONListing(headers, row) {

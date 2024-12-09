@@ -9,7 +9,27 @@
 <body>
     <header><a href="./">Exotic Pet Marketplace</a></header>
     <p><a href="cart.html">Cart</a></p>
-    <div>Search Filter</div>
+    <input type="text" name="search" id="search" placeholder="Search">
+    <div>
+        Filter <br>
+        Breeder <br>
+        <input type="checkbox" name="breeder1" id="breeder1" value="0">
+        <label for="breeder1">Breeder 1</label><br>
+        <input type="checkbox" name="breeder2" id="breeder2" value="1">
+        <label for="breeder2">Breeder 2</label><br>
+        <input type="checkbox" name="breeder3" id="breeder3" value="2">
+        <label for="breeder3">Breeder 3</label><br>
+        <input type="checkbox" name="breeder4" id="breeder4" value="3">
+        <label for="breeder4">Breeder 4</label><br>
+        Experience <br>
+        <input type="checkbox" name="beginner" id="beginner" value="beginner">
+        <label for="beginner">Beginner</label><br>
+        <input type="checkbox" name="intermediate" id="intermediate" value="intermediate">
+        <label for="intermediate">Intermediate</label><br>
+        <input type="checkbox" name="expert" id="expert" value="expert">
+        <label for="expert">Expert</label><br>
+
+    </div>
     <div id="results"></div>
     <div id="pages"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

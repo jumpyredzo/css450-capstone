@@ -10,6 +10,19 @@ function loadData() {
         dataType: "text",
         success: function(data) {createListingArray(data);}
     });
+    setCartQuantity();
+}
+
+function setCartQuantity() {
+    let cart = JSON.parse(window.sessionStorage.getItem("cart"));
+    let cartQuantity = 0;
+    for (let i = 0; i < cart.length; i++) {
+        cartQuantity += 1 * cart[i].quantity;
+    }
+    if (cartQuantity == 0)
+        $("a[href='cart.html']").text("Cart");
+    else
+        $("a[href='cart.html']").html(`Cart<sup>${cartQuantity}</sup>`);
 }
 
 function createListingArray(data) {
@@ -21,6 +34,46 @@ function createListingArray(data) {
     let page = urlParams.get('page');
     if (page === null)
         page = 1;
+    let searchValue = urlParams.get('search');
+    if (searchValue !== null) {
+        for (let i = 0; i < LISTINGS.length; i++) {
+            if (!LISTINGS[i].animalName.toLowerCase().includes(searchValue) &&
+                !LISTINGS[i].scienceName.toLowerCase().includes(searchValue)) {
+                    LISTINGS.splice(i,1);
+                    i--;
+            }
+        }
+        $("#search").val(searchValue);
+    }
+    let filterStr = urlParams.get('filter');
+    if (filterStr !== null) {
+        let filter = filterStr.split(" ");
+        //filters breeders
+        if (filter.includes("0") || filter.includes("1") ||
+            filter.includes("2") || filter.includes("3")) {
+            for (let i = 0; i < LISTINGS.length; i++) {
+                if (!filter.includes(LISTINGS[i].breederID)) {
+                        LISTINGS.splice(i,1);
+                        i--;
+                }
+            }
+        }
+        //now filters experience level
+        if (filter.includes("beginner") || filter.includes("intermediate") ||
+            filter.includes("expert")) {
+            for (let i = 0; i < LISTINGS.length; i++) {
+                if (!filter.includes(LISTINGS[i].experienceLvl.toLowerCase())) {
+                        LISTINGS.splice(i,1);
+                        i--;
+                }
+            }
+        }
+        for (let i = 0; i < filter.length; i++) {
+            $(`input[type='checkbox'][value=${filter[i]}]`).prop("checked", true);
+        }
+    }
+    $("input[type='checkbox']").on("change", function(event) {filterMarketplace(event);});
+    $("#search").on("keyup", function(event) {searchMarketplace(event);});
     loadMarketplace(page);
 }
 
@@ -38,6 +91,48 @@ function loadMarketplace(page) {
         createDOMListing(LISTINGS[i]);
     }
     createPageSelectors(page);
+}
+
+function searchMarketplace(event) {
+    if (event.which == 13) {
+        let searchValue = $(event.target).val().toLowerCase();
+        let queryStr = "?";
+        const urlParams = new URLSearchParams(window.location.search);
+        let currFilter = urlParams.get("filter");
+        if (currFilter !== null) {
+            queryStr += `filter=${currFilter}&`;
+        }
+        window.location.assign(queryStr + `search=${searchValue}`);
+    }
+}
+
+function filterMarketplace(event) {
+    const urlParams = new URLSearchParams(window.location.search);
+    let searchVal = urlParams.get("search");
+    let queryStr = "?";
+    if (searchVal !== null)
+        queryStr += `search=${searchVal}&`;
+    let currFilter = urlParams.get("filter");
+    if (currFilter !== null && event.target.checked) 
+        queryStr += `filter=${currFilter} ${$(event.target).val()}`;
+    else if (currFilter !== null && !event.target.checked) {
+        currFilter = currFilter.split(" ");
+        for (let i = 0; i < currFilter.length; i++) {
+            if (currFilter[i] == $(event.target).val()) {
+                currFilter.splice(i, 1);
+                break;
+            }
+        }
+        currFilter = currFilter.join(" ");
+        if (currFilter.length > 0)
+            queryStr += `filter=${currFilter}`;
+    }
+    else
+        queryStr += `filter=${$(event.target).val()}`;
+    if (queryStr == "?")
+        window.location.assign("/");    
+    else
+        window.location.assign(queryStr);
 }
 
 function createDOMListing(listing) {
@@ -59,9 +154,18 @@ function createDOMListing(listing) {
 
 function createPageSelectors(page) {
     const numPages = Math.ceil(LISTINGS.length / 9);
+    const urlParams = new URLSearchParams(window.location.search);
+    let searchVal = urlParams.get("search");
+    let queryStr = "?";
+    if (searchVal !== null)
+        queryStr += `search=${searchVal}&`;
+    let currFilter = urlParams.get("filter");
+    if (currFilter !== null) {
+        queryStr += `filter=${currFilter}&`;
+    }
     for (let i = 1; i <= numPages; i++) {
         let pageLink = document.createElement("a");
-        $(pageLink).attr("href", `?page=${i}`).text(i);
+        $(pageLink).attr("href", queryStr + `page=${i}`).text(i);
         if (i == page)
             $(pageLink).attr("id", "currentPage");
         $("#pages").append(pageLink);
