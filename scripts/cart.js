@@ -15,8 +15,10 @@ function loadData() {
 function setCartQuantity() {
     let cart = JSON.parse(window.sessionStorage.getItem("cart"));
     let cartQuantity = 0;
-    for (let i = 0; i < cart.length; i++) {
-        cartQuantity += 1 * cart[i].quantity;
+    if (cart !== null) {
+        for (let i = 0; i < cart.length; i++) {
+            cartQuantity += 1 * cart[i].quantity;
+        }
     }
     if (cartQuantity == 0)
         $("a[href='cart.html']").text("Cart");
