@@ -72,8 +72,14 @@ function createListingArray(data) {
             $(`input[type='checkbox'][value=${filter[i]}]`).prop("checked", true);
         }
     }
+    $("#clearSearch").on("click", function(event) {
+        searchMarketplace("");
+    });
     $("input[type='checkbox']").on("change", function(event) {filterMarketplace(event);});
-    $("#search").on("keyup", function(event) {searchMarketplace(event);});
+    $("#search").on("keyup", function(event) {
+        if (event.which == 13)
+            searchMarketplace($(event.target).val().toLowerCase());
+    });
     loadMarketplace(page);
 }
 
@@ -93,24 +99,21 @@ function loadMarketplace(page) {
     createPageSelectors(page);
 }
 
-function searchMarketplace(event) {
-    if (event.which == 13) {
-        let searchValue = $(event.target).val().toLowerCase();
-        let queryStr = "?";
-        const urlParams = new URLSearchParams(window.location.search);
-        let currFilter = urlParams.get("filter");
-        if (currFilter !== null) {
-            queryStr += `filter=${currFilter}&`;
-        }
-        if (searchValue == "") {
-            if (queryStr == "?")
-                window.location.assign("/");
-            else
-                window.location.assign(queryStr.slice(0,queryStr.length-1));
-        }
-        else
-            window.location.assign(queryStr + `search=${searchValue}`);
+function searchMarketplace(searchValue) {
+    let queryStr = "?";
+    const urlParams = new URLSearchParams(window.location.search);
+    let currFilter = urlParams.get("filter");
+    if (currFilter !== null) {
+        queryStr += `filter=${currFilter}&`;
     }
+    if (searchValue == "") {
+        if (queryStr == "?")
+            window.location.assign("/");
+        else
+            window.location.assign(queryStr.slice(0,queryStr.length-1));
+    }
+    else
+        window.location.assign(queryStr + `search=${searchValue}`);
 }
 
 function filterMarketplace(event) {
