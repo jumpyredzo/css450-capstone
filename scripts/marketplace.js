@@ -170,4 +170,14 @@ function createPageSelectors(page) {
             $(pageLink).attr("id", "currentPage");
         $("#pages").append(pageLink);
     }
+    if (numPages > 1 && page != 1) {
+        let prevPageSelector = document.createElement("a");
+        $(prevPageSelector).attr("href", queryStr + `page=${1*page-1}`).text("<");
+        $("#pages").prepend(prevPageSelector);
+    }
+    if (numPages > 1 && numPages != page) {
+        let nextPageSelector = document.createElement("a");
+        $(nextPageSelector).attr("href", queryStr + `page=${1*page+1}`).text(">");
+        $("#pages").append(nextPageSelector);
+    }
 }
