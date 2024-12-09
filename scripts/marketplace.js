@@ -6,7 +6,7 @@ $(loadData);
 function loadData() {
     $.ajax({
         type: "GET",
-        url: "data.csv",
+        url: "../data.csv",
         dataType: "text",
         success: function(data) {createListingArray(data);}
     });
