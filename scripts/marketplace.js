@@ -96,6 +96,12 @@ function loadMarketplace(page) {
     for (let i = 0+PAGE_BUFFER; i < MAX_RESULTS_PER_PAGE+PAGE_BUFFER && i < LISTINGS.length; i++) {
         createDOMListing(LISTINGS[i]);
     }
+    if (LISTINGS.length == 0) {
+        let noMatches = document.createElement("div");
+        $(noMatches).attr("class", "listing");
+        $(noMatches).text("No Matching Listings");
+        $("#results").append(noMatches);
+    }
     createPageSelectors(page);
 }
 
@@ -127,6 +133,10 @@ function filterMarketplace(event) {
         queryStr += `filter=${currFilter} ${$(event.target).val()}`;
     else if (currFilter !== null && !event.target.checked) {
         currFilter = currFilter.split(" ");
+        
+        if (currFilter.length == 1)
+            currFilter = [];
+        
         for (let i = 0; i < currFilter.length; i++) {
             if (currFilter[i] == $(event.target).val()) {
                 currFilter.splice(i, 1);
@@ -141,7 +151,7 @@ function filterMarketplace(event) {
     }
     else
         queryStr += `filter=${$(event.target).val()}`;
-    if (queryStr == "?")
+    if (queryStr == "?" || queryStr == "")
         window.location.assign("/");    
     else
         window.location.assign(queryStr);
