@@ -6,7 +6,7 @@ $(loadData);
 function loadData() {
     $.ajax({
         type: "GET",
-        url: "../data.csv",
+        url: "https://raw.githubusercontent.com/jumpyredzo/css450-capstone/refs/heads/main/data.csv",
         dataType: "text",
         success: function(data) {createListingArray(data);}
     });
