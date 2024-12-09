@@ -102,7 +102,14 @@ function searchMarketplace(event) {
         if (currFilter !== null) {
             queryStr += `filter=${currFilter}&`;
         }
-        window.location.assign(queryStr + `search=${searchValue}`);
+        if (searchValue == "") {
+            if (queryStr == "?")
+                window.location.assign("/");
+            else
+                window.location.assign(queryStr.slice(0,queryStr.length-1));
+        }
+        else
+            window.location.assign(queryStr + `search=${searchValue}`);
     }
 }
 
@@ -126,6 +133,8 @@ function filterMarketplace(event) {
         currFilter = currFilter.join(" ");
         if (currFilter.length > 0)
             queryStr += `filter=${currFilter}`;
+        else
+            queryStr = queryStr.slice(0, queryStr.length - 1);
     }
     else
         queryStr += `filter=${$(event.target).val()}`;
