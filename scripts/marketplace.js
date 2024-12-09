@@ -28,7 +28,8 @@ function setCartQuantity() {
 }
 
 function createListingArray(data) {
-    data = data.split("\r\n");
+    data = data.replace("\r", "");
+    data = data.split("\n");
     let headers = data[0].split(",");
     for (let i = 1; i < data.length; i++) 
         LISTINGS[i-1] = createJSONListing(headers, data[i].split(","));
