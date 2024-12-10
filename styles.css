@@ -6,6 +6,37 @@
     align-items: center;
 }
 
+#pages {
+    display: block;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    color: black;
+}
+
+a[href="cart.html"], a[href="./"] {
+    padding: 0.5em;
+}
+
+#pages a {
+    color: black;
+    padding: 1em;
+    margin: 1em;
+}
+
+a:hover {
+    color: cyan !important;
+}
+
+a#currentPage {
+    color: cyan !important;
+}
+
 .listing {
     margin: 15px;
     padding: 15px;

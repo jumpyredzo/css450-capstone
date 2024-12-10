@@ -65,7 +65,7 @@ function createListingArray(data) {
         if (filter.includes("beginner") || filter.includes("intermediate") ||
             filter.includes("expert")) {
             for (let i = 0; i < LISTINGS.length; i++) {
-                if (!filter.includes(LISTINGS[i].experienceLvl.toLowerCase())) {
+                if (!filter.includes(LISTINGS[i].experienceLvl.toLowerCase().trim())) {
                         LISTINGS.splice(i,1);
                         i--;
                 }
